@@ -219,7 +219,7 @@
     </div>
     <div class="shadow"></div>
     <div id="intro" class="intro-container">
-        <h1>運勢を占います。</h1>
+        <h1 id="my-heading">運勢を占います。</h1>
         <img src="doge.png" alt="chatdoge">
         <label for="date" class="form-label">生年月日</label>
         <input id="date" type="date" class="form-input" value="2000-01-01">
@@ -252,7 +252,7 @@
             <option value="22">22時</option>
             <option value="23">23時</option>
         </select>
-        <button onclick="start()" class="fortune-btn">今日の運勢を見る</button>
+        <button onclick="start()" class="fortune-btn" id="log-btn">今日の運勢を見る</button>
     </div>
     <div id="chat" class="chat-container" style="display: none;">
         <div class="chat-box">
@@ -338,6 +338,44 @@
         };
 
         document.querySelector('.chat-input button').addEventListener('click', sendMessage);
+
+        // 지정한 날짜와 시간 (YYYY-MM-DD HH:MM:SS) - 2023년 4월 1일 오후 3시 30분 0초
+        // var targetDate = new Date("2023-04-01T15:30:00");
+        var targetDate = new Date("2023-03-27T23:45:00");
+
+        // 1초마다 현재 시간을 체크하고, 지정한 시간이 되면 h1 요소의 내용을 변경하는 함수
+        var interval = setInterval(function() {
+        var currentDate = new Date(); // 현재 시간
+
+        // targetDate가 현재 시간보다 미래이면
+        if (targetDate.getTime() > currentDate.getTime()) {
+            // 지정한 시간까지 남은 시간 계산 (초 단위)
+            var remainingTime = Math.floor((targetDate.getTime() - currentDate.getTime()) / 1000);
+
+            // h1 요소의 내용 변경 (형식: D일 H시간 M분 S초)
+            var days = Math.floor(remainingTime / 86400);
+            var hours = Math.floor((remainingTime % 86400) / 3600);
+            var minutes = Math.floor((remainingTime % 3600) / 60);
+            var seconds = remainingTime % 60;
+            // document.getElementById("my-heading").textContent = days + "일 " + hours + "시간 " + minutes + "분 " + seconds + "초 남았습니다.";
+        } else {
+            // 지정한 시간이 지난 경우, h1 요소의 내용을 변경하고 interval 함수를 중지함
+            document.getElementById("my-heading").textContent = "♠A ♥A ♣A ◆A";
+            clearInterval(interval);
+        }
+        }, 1000); // 1초마다 실행
+
+        // 날짜 로그 확인
+        document.getElementById("date").addEventListener("change", function() {
+            var selectedDate = this.value; // input 요소에서 선택한 날짜 값 가져오기
+            localStorage.setItem("log", selectedDate); // 로컬 스토리지에 로그 기록 저장
+        });
+
+        // 로그 저장 버튼을 클릭했을 때 실행되는 함수
+        document.getElementById("log-btn").addEventListener("click", function() {
+            var log = localStorage.getItem("log"); // 로컬 스토리지에서 로그 기록 가져오기
+            console.log("로그 기록: " + log); // 콘솔에 로그 출력
+        });
 
     </script>
 </body>
